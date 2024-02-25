@@ -108,27 +108,30 @@ typedef long long ll;
 
 const ll mod = 1000000007;
 
-
-class Solution
-{
+class Solution {
 public:
-    bool isPossibleToSplit(vector<int> &nums)
-    {
-        int n = nums.size();
+    long long largestSquareArea(vector<vector<int>>& bottomLeft, vector<vector<int>>& topRight) {
+        long long area = 0;
 
-        unordered_map<int, int> mpp;
-        for (auto i : nums)
-            mpp[i]++;
-
-        for (auto i : mpp)
+        for(int i=0;i<bottomLeft.size();i++)
         {
-            if (i.second > 2)
+            for(int j=i+1;j<topRight.size();j++)
             {
-                return false;
+                long long min_x = max(bottomLeft[i][0],bottomLeft[j][0]);
+                long long max_x = min(topRight[i][0],topRight[j][0]);
+                long long min_y = max(bottomLeft[i][1],bottomLeft[j][1]);
+                long long max_y = min(topRight[i][1],topRight[j][1]);
+                
+                // debug(min_x,max_x,min_y,max_y);
+                if(min_x < max_x && min_y < max_y)
+                {
+                    long long s = min(max_x-min_x, max_y-min_y);
+                    area = max(area,s*s);
+                }
             }
         }
-        debug(mpp);
-        return true;
+
+        return area;
     }
 };
 
@@ -138,10 +141,10 @@ signed main()
     cin.tie(0);
     cout.tie(0);
 
-    Solution s;
-    vector<int> a = {1, 2, 3,4};
-    cout << s.isPossibleToSplit(a) << endl;
-
+    vector<vector<int>> bottomLeft = {{1,1},{2,2},{3,1}};
+    vector<vector<int>> topRight = {{3,3},{4,4},{6,6}};
+    Solution sol;
+    cout<<sol.largestSquareArea(bottomLeft,topRight)<<endl;
 
     return 0;
 }
