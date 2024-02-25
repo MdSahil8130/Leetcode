@@ -143,17 +143,6 @@ signed main()
     cin.tie(0);
     cout.tie(0);
 
-    // int t = 1;
-    // // cin>>t;
-    // while(t--){
-    //     solve();
-
-    // }
-
-    // arr =
-    //     [ 5, 5, 4 ] k =
-    //         1
-
     vector<int> a = {5, 5, 4, 4};
     Solution s;
     cout << s.isPossibleToSplit(a) << endl;
