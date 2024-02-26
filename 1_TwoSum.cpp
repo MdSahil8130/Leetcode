@@ -2,7 +2,7 @@
 using namespace std;
 
 #ifdef LOCAL
-string to_string(char s) { return "'" + string(1, s) + "'"; }
+string to_string(char s) { return "'" + string(1,s) + "'"; }
 string to_string(string s) { return '"' + s + '"'; }
 string to_string(const char *s) { return to_string((string)s); }
 string to_string(bool b) { return (b ? "1" : "0"); }
@@ -79,24 +79,23 @@ string to_string(const std::stack<T, Container> &s)
 template <typename A>
 string to_string(A v)
 {
-    bool first = true;
-    string res = "{";
-    for (const auto &x : v)
-    {
-        if (!first)
-            res += ", ";
-        first = false;
-        res += to_string(x);
-    }
-    res += "}";
-    return res;
+  bool first = true;
+  string res = "{";
+  for (const auto &x : v)
+  {
+    if (!first) res += ", ";
+    first = false;
+    res += to_string(x);
+  }
+  res += "}";
+  return res;
 }
 void debug_out() { cerr << endl; }
 template <typename Head, typename... Tail>
 void debug_out(Head H, Tail... T)
 {
-    cerr << " " << to_string(H);
-    debug_out(T...);
+  cerr << " " << to_string(H);
+  debug_out(T...);
 }
 #define debug(...) cerr << "[" << #__VA_ARGS__ << "]:", debug_out(__VA_ARGS__)
 #else
@@ -109,28 +108,23 @@ typedef long long ll;
 
 const ll mod = 1000000007;
 
-struct TreeNode
-{
-    int val;
-    TreeNode *left;
-    TreeNode *right;
-    TreeNode() : val(0), left(nullptr), right(nullptr) {}
-    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
-};
 
-class Solution
-{
+class Solution {
 public:
-    bool isSameTree(TreeNode *p, TreeNode *q)
-    {
-        if (p == NULL && q == NULL)
-            return true;
+    vector<int> twoSum(vector<int>& nums, int target) {
+        unordered_map<int,int> mpp;
+        int n = nums.size();
 
-        if (p == NULL || q == NULL || p->val != q->val)
-            return false;
+        for(int i=0;i<n;i++)
+        {
+            int comp = target-nums[i];
+            if(mpp.find(comp)!=mpp.end())
+            return {i,mpp[comp]};
 
-        return isSameTree(p->left, q->left) && isSameTree(p->right, q->right);
+            mpp[nums[i]] = i;
+        }
+
+        return {};
     }
 };
 
@@ -140,11 +134,11 @@ signed main()
     cin.tie(0);
     cout.tie(0);
 
-    TreeNode *p = new TreeNode(1, new TreeNode(2), new TreeNode(3));
-    TreeNode *q = new TreeNode(1, new TreeNode(2), new TreeNode(3));
-
     Solution sol;
-    cout << sol.isSameTree(p, q) << endl;
+    vector<int> nums = {2,7,11,15};
+    int target = 9;
+    vector<int> ans = sol.twoSum(nums,target);
+    debug(ans);
 
     return 0;
 }
