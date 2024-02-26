@@ -108,12 +108,39 @@ typedef long long ll;
 
 const ll mod = 1000000007;
 
+class Solution {
+public:
+    int digitSquareSum(int n) {
+        int sum = 0;
+        while (n > 0) {
+            int digit = n % 10;
+            sum += digit * digit;
+            n /= 10;
+        }
+        return sum;
+    }
+
+    bool isHappy(int n) {
+        int slow, fast;
+        slow = fast = n;
+        do{
+            slow = digitSquareSum(slow);
+            fast = digitSquareSum(digitSquareSum(fast));
+        } while (slow != fast);
+        return slow == 1;
+
+    }
+};
+
 
 signed main()
 {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     cout.tie(0);
+
+    Solution s;
+    cout << s.isHappy(2) << endl;
 
     return 0;
 }
