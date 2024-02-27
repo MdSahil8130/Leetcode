@@ -108,29 +108,38 @@ typedef long long ll;
 
 const ll mod = 1000000007;
 
-class Solution {
-public:
-    int digitSquareSum(int n) {
-        int sum = 0;
-        while (n > 0) {
-            int digit = n % 10;
-            sum += digit * digit;
-            n /= 10;
-        }
-        return sum;
-    }
-
-    bool isHappy(int n) {
-        unordered_set<int> seen;
-        while (n != 1 && seen.find(n) == seen.end()) {
-            seen.insert(n);
-            n = digitSquareSum(n);
-        }
-
-        return n == 1;
-    }
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
 
+class Solution {
+public:
+
+    int solve(TreeNode*root, int &maxi)
+    {
+        if(!root)
+        return 0;
+
+        int left = solve(root->left,maxi);
+        int right = solve(root->right,maxi);
+
+        maxi = max(maxi,left+right);
+
+        return max(left,right) + 1;
+
+    }
+
+    int diameterOfBinaryTree(TreeNode* root) {
+        int maxi = 0;
+        solve(root,maxi);
+        return maxi;
+    }
+};
 
 signed main()
 {
@@ -139,7 +148,13 @@ signed main()
     cout.tie(0);
 
     Solution s;
-    cout << s.isHappy(19) << endl;
+    TreeNode *root = new TreeNode(1);
+    root->left = new TreeNode(2);
+    root->right = new TreeNode(3);
+    root->left->left = new TreeNode(4);
+    root->left->right = new TreeNode(5);
+
+    cout << s.diameterOfBinaryTree(root) << endl;
 
     return 0;
 }
