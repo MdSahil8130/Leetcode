@@ -117,7 +117,7 @@ public:
         while(left<=right)
         {
             if(s[left]=='1')left++;
-            if(s[right]=='1')right--;
+            if(s[right]=='0')right--;
             
             if(left<=right && s[left]=='0' && s[right]=='1')
             {
@@ -127,6 +127,7 @@ public:
         swap(s[left-1],s[s.size()-1]);
 
         return s;
+        debug(s);
     }
 };
 
@@ -137,9 +138,9 @@ signed main()
     cout.tie(0);
 
     Solution sol;
-    string s;
-    cin >> s;
+    string s="1010";
     cout << sol.maximumOddBinaryNumber(s) << endl;
+    debug(s);
     
 
     return 0;
