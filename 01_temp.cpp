@@ -112,50 +112,41 @@ const ll mod = 1000000007;
 class Solution
 {
 public:
-    int minimumOperationsToMakeEqual(int x, int y)
+    vector<string> shortestSubstrings(vector<string> &arr)
     {
-        int min_op = 0;
-        if (x == y)
-            return 0;
-        if (x < y)
-            return y - x;
+        int n = arr.size();
+        vector<string> ans(n);
 
-        unordered_set<int> vis;
-        queue<int> q;
-        q.push(x);
-
-        while (!q.empty())
+        for (int i = 0; i < n; i++)
         {
-            int sz = q.size();
-            while (sz--)
+            string best = "";
+            for (int j = 0; j < arr[i].length(); j++)
             {
-                int a = q.front();
-                q.pop();
-
-                if (vis.find(a) != vis.end())
-                    continue;
-
-                vis.insert(a);
-
-                if (a == y)
-                    return min_op;
-
-                if (a % 11 == 0)
+                for (int k = j + 1; k <= arr[i].length(); k++)
                 {
-                    q.push(a / 11);
-                }
-                if (a % 5 == 0)
-                {
-                    q.push(a / 5);
-                }
+                    string t = arr[i].substr(j, k - j);
+                    bool found = false;
+                    for (int l = 0; l < n; l++)
+                    {
+                        if (l == i)
+                            continue;
+                        if (arr[l].find(t) != string::npos)
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
 
-                q.push(a + 1);
-                q.push(a - 1);
+                    if (!found && (best.empty() || t.length() < best.length() || (t.length() == best.length() && t < best)))
+                    {
+                        best = t;
+                    }
+                }
             }
-            min_op++;
+            ans[i] = best;
         }
 
-        return -1;
+        return ans;
     }
 };
 
@@ -165,9 +156,12 @@ signed main()
     cin.tie(0);
     cout.tie(0);
 
+    // arr = ["cab","ad","bad","c"] test case
+
+    vector<string> arr = {"cab", "ad", "bad", "c"};
     Solution sol;
-    int x = 26, y = 1;
-    cout << sol.minimumOperationsToMakeEqual(x, y) << endl;
+    vector<string> ans = sol.shortestSubstrings(arr);
+    debug(ans);
 
     return 0;
 }
