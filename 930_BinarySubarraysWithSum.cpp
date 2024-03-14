@@ -109,32 +109,34 @@ typedef long long ll;
 
 const ll mod = 1000000007;
 
-class Solution {
+class Solution
+{
 public:
-    int findKthPositive(vector<int>& arr, int k) {
-        vector<int> nums(1001);
-        int n = arr.size();
-        unordered_map<int,int> mpp;
-        for(int i=0;i<n;i++)
-        {
-            mpp[arr[i]]=1;
-        }
+    int f(vector<int> &nums, int goal)
+    {
+        int n = nums.size();
+        int i = 0, j = 0;
+        int sum = 0;
         int ans = 0;
-        debug(mpp);
-        for(int i=0;i<=1000;i++)
+        while (j < n)
         {
-            if(k<0)
-            break;
-            if(mpp.count(i)==0 && k>=0)
+            sum += nums[j];
+            while (sum > goal && i <= j)
             {
-                ans = i;
-                k--;
+                sum -= nums[i++];
             }
+            ans += (j - i + 1);
+            j++;
         }
+
         return ans;
     }
-};
 
+    int numSubarraysWithSum(vector<int> &nums, int goal)
+    {
+        return f(nums, goal) - f(nums, goal - 1);
+    }
+};
 
 signed main()
 {
@@ -142,11 +144,12 @@ signed main()
     cin.tie(0);
     cout.tie(0);
 
-    Solution sol;
-    vector<int> arr = {1,2,3,4};
-    int k = 2;
-    cout<<sol.findKthPositive(arr,k)<<endl;
+    // nums = [0,0,0,0,0], goal = 0
 
+    Solution s;
+    vector<int> nums = {0, 0, 0, 0, 0};
+    int goal = 0;
+    cout << s.numSubarraysWithSum(nums, goal) << endl;
 
     return 0;
 }
