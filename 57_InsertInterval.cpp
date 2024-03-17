@@ -2,7 +2,7 @@
 using namespace std;
 
 #ifdef LOCAL
-string to_string(char s) { return "'" + string(1, s) + "'"; }
+string to_string(char s) { return "'" + string(1,s) + "'"; }
 string to_string(string s) { return '"' + s + '"'; }
 string to_string(const char *s) { return to_string((string)s); }
 string to_string(bool b) { return (b ? "1" : "0"); }
@@ -79,24 +79,23 @@ string to_string(const std::stack<T, Container> &s)
 template <typename A>
 string to_string(A v)
 {
-    bool first = true;
-    string res = "{";
-    for (const auto &x : v)
-    {
-        if (!first)
-            res += ", ";
-        first = false;
-        res += to_string(x);
-    }
-    res += "}";
-    return res;
+  bool first = true;
+  string res = "{";
+  for (const auto &x : v)
+  {
+    if (!first) res += ", ";
+    first = false;
+    res += to_string(x);
+  }
+  res += "}";
+  return res;
 }
 void debug_out() { cerr << endl; }
 template <typename Head, typename... Tail>
 void debug_out(Head H, Tail... T)
 {
-    cerr << " " << to_string(H);
-    debug_out(T...);
+  cerr << " " << to_string(H);
+  debug_out(T...);
 }
 #define debug(...) cerr << "[" << #__VA_ARGS__ << "]:", debug_out(__VA_ARGS__)
 #else
@@ -108,36 +107,37 @@ typedef long long ll;
 #define endl '\n'
 
 const ll mod = 1000000007;
+
 class Solution {
 public:
-    int minimumDeletions(string word, int k) {
-        unordered_map<char,int> mpp;
-        for(auto it : word)
-        mpp[it]++;
+    vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
+        vector<vector<int>> ans;
+        int n  = intervals.size(), st=newInterval[0], en=newInterval[1] , i=0;
 
-        int ans = 1e9;
-        for(auto i : mpp)
+        while(i<n && intervals[i][1]<st)
         {
-            int res = 0;
-            int bound = i.second;
-
-            debug(bound,i.first);
-            for(auto i : mpp)
-            {
-                debug(i.first,i.second);
-                if(i.second<bound)res+=i.second;
-                else if(i.second>bound+k) res+=i.second-(bound+k);
-            }
-            if(ans==0)
-            break;
-            ans = min(ans,res);
-            debug(ans);
+            ans.push_back(intervals[i]);
+            i++;
         }
 
-        return ans==INT_MAX?0 : ans;
+        while(i<n && intervals[i][0]<=en)
+        {
+            newInterval[0] = min(newInterval[0], intervals[i][0]);
+            newInterval[1] = max(newInterval[1], intervals[i][1]);
+            i++;
+        }
+
+        ans.push_back(newInterval);
+
+        while(i<n)
+        {
+            ans.push_back(intervals[i]);
+            i++;
+        }
+
+        return ans;
     }
 };
-
 
 
 signed main()
@@ -145,15 +145,13 @@ signed main()
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     cout.tie(0);
+    Solution ob;
+    vector<vector<int>> intervals = {{1,3},{6,9}};
+    vector<int> newInterval = {2,5};
+    vector<vector<int>> ans = ob.insert(intervals, newInterval);
 
-    // word = "dabdcbdcdcd", k = 2 test case
-
-    string word = "dabdcbdcdcd";
-    int k = 2;
-
-    Solution sol;
-    cout << sol.minimumDeletions(word, k) << endl;
-
+    debug(ans);
+    
 
     return 0;
 }
