@@ -121,20 +121,38 @@ struct ListNode
 class Solution
 {
 public:
-    ListNode *reverseList(ListNode *head)
+    void reorderList(ListNode *head)
     {
-        ListNode *pre = NULL;
-        ListNode *curr = head;
+        auto slow = head, fast = head;
 
-        while (curr)
+        while (fast && fast->next)
         {
-            auto forward = curr->next;
-            curr->next = pre;
-            pre = curr;
-            curr = forward;
+            fast = fast->next->next;
+            slow = slow->next;
         }
 
-        return pre;
+        ListNode *p = nullptr, *q = slow;
+
+        while (q)
+        {
+            ListNode *r = q->next;
+            q->next = p;
+            p = q;
+            q = r;
+        }
+
+        auto h1 = head, h2 = p;
+
+        while (h2->next)
+        {
+            ListNode *temp = h1->next;
+            h1->next = h2;
+            h1 = temp;
+
+            temp = h2->next;
+            h2->next = h1;
+            h2 = temp;
+        }
     }
 };
 
@@ -144,19 +162,21 @@ signed main()
     cin.tie(0);
     cout.tie(0);
 
+    // head = [1,2,3,4,5] test case
+
     ListNode *head = new ListNode(1);
     head->next = new ListNode(2);
     head->next->next = new ListNode(3);
     head->next->next->next = new ListNode(4);
     head->next->next->next->next = new ListNode(5);
- 
+
     Solution sol;
-    
-    auto res = sol.reverseList(head);
-    while (res)
+    sol.reorderList(head);
+
+    while (head)
     {
-        cout << res->val << " ";
-        res = res->next;
+        cout << head->val << " ";
+        head = head->next;
     }
 
     return 0;
