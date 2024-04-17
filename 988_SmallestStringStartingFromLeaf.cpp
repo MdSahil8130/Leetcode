@@ -2,7 +2,7 @@
 using namespace std;
 
 #ifdef LOCAL
-string to_string(char s) { return "'" + string(1, s) + "'"; }
+string to_string(char s) { return "'" + string(1,s) + "'"; }
 string to_string(string s) { return '"' + s + '"'; }
 string to_string(const char *s) { return to_string((string)s); }
 string to_string(bool b) { return (b ? "1" : "0"); }
@@ -79,24 +79,23 @@ string to_string(const std::stack<T, Container> &s)
 template <typename A>
 string to_string(A v)
 {
-    bool first = true;
-    string res = "{";
-    for (const auto &x : v)
-    {
-        if (!first)
-            res += ", ";
-        first = false;
-        res += to_string(x);
-    }
-    res += "}";
-    return res;
+  bool first = true;
+  string res = "{";
+  for (const auto &x : v)
+  {
+    if (!first) res += ", ";
+    first = false;
+    res += to_string(x);
+  }
+  res += "}";
+  return res;
 }
 void debug_out() { cerr << endl; }
 template <typename Head, typename... Tail>
 void debug_out(Head H, Tail... T)
 {
-    cerr << " " << to_string(H);
-    debug_out(T...);
+  cerr << " " << to_string(H);
+  debug_out(T...);
 }
 #define debug(...) cerr << "[" << #__VA_ARGS__ << "]:", debug_out(__VA_ARGS__)
 #else
@@ -109,47 +108,60 @@ typedef long long ll;
 
 const ll mod = 1000000007;
 
-class Solution
-{
+
+class Solution {
 public:
-    long long countSubarrays(vector<int> &a, int minK, int maxK)
+    void dfs(TreeNode*root,string &ans,string temp)
     {
-        int n = a.size(), j = 0, i = -1, prevMaxK = -1, prevMinK = -1;
-        long long ans = 0;
-        while (j < n)
+        if(!root)
+        return ;
+
+        temp = char(root->val+'a') + temp;
+        if(!root->left&&!root->right)
         {
-            if (a[j] < minK || a[j] > maxK)
-                i = j;
-            if (a[j] == minK)
-                prevMinK = j;
-            if (a[j] == maxK)
-                prevMaxK = j;
-            ans += max(0, min(prevMaxK, prevMinK) - i);
-            j++;
+            if(ans=="" || ans>temp){
+                ans = temp;
+            }
         }
+
+        if(root->left)
+        dfs(root->left,ans,temp);
+
+        if(root->right)
+        dfs(root->right,ans,temp);
+    }
+
+    string smallestFromLeaf(TreeNode* root) {
+        string ans = "";
+        queue<pair<TreeNode*,string>> q;
+        q.push({root,string(1,root->val+'a')});
+        while(!q.empty())
+        {
+            auto [node,temp]= q.front();q.pop();
+            if(!node->left &&!node->right)
+            {
+                if(ans.empty() || ans>temp){
+                    ans = temp;
+                }
+            }
+
+            if(node->left)
+            q.push({node->left,char(node->left->val+'a')+temp});
+            if(node->right)
+            q.push({node->right,char(node->right->val+'a')+temp});
+
+        }
+
         return ans;
     }
 };
-auto init = []()
-{
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-    cout.tie(nullptr);
-    return 'c';
-}();
+
 
 signed main()
 {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     cout.tie(0);
-
-    //  generate test cases here
-    vector<int> a = {3, 4, 1, 2, 5, 6, 7};
-    int minK = 3, maxK = 6;
-    Solution obj;
-    cout << obj.countSubarrays(a, minK, maxK) << endl;
-    
 
     return 0;
 }
